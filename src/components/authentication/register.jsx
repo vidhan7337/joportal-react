@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 function RegisterForm() {
 
-    const initialValues = { fullname: "", username: "", email: "", phone: "", password: "",userType:"Employer" };
+    const initialValues = { fullname: "", username: "", email: "", phone: "", password: "", userType: "Employer" };
     const [formValues, setFormValues] = useState(initialValues);
     const [formErrors, setFormErrors] = useState({});
     const [isSubmit, setIsSubmit] = useState(false);
@@ -25,7 +25,7 @@ function RegisterForm() {
     const radioChange = (e) => {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
-        
+
     }
 
     useEffect(() => {
@@ -138,14 +138,15 @@ function RegisterForm() {
                                 type="radio"
                                 value="Employer"
                                 name="userType"
-                                checked={formValues.userType==="Employer"}
+                                checked={formValues.userType === "Employer"}
                             ></input>Employer</label>
+                        <br></br>    
                         <label>
                             <input className="radio"
                                 type="radio"
                                 value="JobSeeker"
                                 name="userType"
-                                checked={formValues.userType==="JobSeeker"}
+                                checked={formValues.userType === "JobSeeker"}
                             ></input>JobSeeker</label>
                     </div>
 
