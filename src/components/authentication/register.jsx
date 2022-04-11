@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Navbar from "../navbar";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../utils/loader";
 function RegisterForm() {
   const initialValues = {
-    fullname: "",
-    username: "",
+    fullName: "",
+    userName: "",
     email: "",
     phone: "",
     password: "",
@@ -13,7 +15,8 @@ function RegisterForm() {
   const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
   //field change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,6 +40,20 @@ function RegisterForm() {
     console.log(formErrors);
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
+      setLoading(true);
+      axios
+        .post("https://localhost:44361/gateway/register", formValues)
+        .then((response) => {
+          setLoading(false);
+          console.log(response);
+
+          navigate("/login");
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log(error);
+          alert("Please provide proper information");
+        });
     }
   }, [formErrors]);
 
@@ -45,14 +62,14 @@ function RegisterForm() {
     const errors = {};
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     const regexName = /^[a-zA-Z]+$/;
-    if (!values.fullname) {
-      errors.fullname = "Fullname is required";
-    } else if (!regexName.test(values.fullname)) {
-      errors.fullname = "Fullname should only contain characters";
+    if (!values.fullName) {
+      errors.fullName = "Fullname is required";
+    } else if (!regexName.test(values.fullName)) {
+      errors.fullName = "Fullname should only contain characters";
     }
 
-    if (!values.username) {
-      errors.username = "Username is required!";
+    if (!values.userName) {
+      errors.userName = "Username is required!";
     }
     if (!values.email) {
       errors.email = "Email is required!";
@@ -73,6 +90,9 @@ function RegisterForm() {
   };
 
   //ui for registration form
+  if (loading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div>
       <Navbar />
@@ -85,9 +105,9 @@ function RegisterForm() {
               <label>Fullname : </label>
               <input
                 type="text"
-                name="fullname"
+                name="fullName"
                 placeholder="Fullname"
-                value={formValues.fullname}
+                value={formValues.fullName}
                 onChange={handleChange}
               />
             </div>
@@ -96,9 +116,9 @@ function RegisterForm() {
               <label>Username : </label>
               <input
                 type="text"
-                name="username"
+                name="userName"
                 placeholder="Username"
-                value={formValues.username}
+                value={formValues.userName}
                 onChange={handleChange}
               />
             </div>
