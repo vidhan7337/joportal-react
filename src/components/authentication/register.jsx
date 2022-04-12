@@ -3,6 +3,9 @@ import Navbar from "../navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../utils/loader";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 function RegisterForm() {
   const initialValues = {
     fullName: "",
@@ -46,13 +49,13 @@ function RegisterForm() {
         .then((response) => {
           setLoading(false);
           console.log(response);
-
+          toast("Registered successfully now please login");
           navigate("/login");
         })
         .catch((error) => {
           setLoading(false);
           console.log(error);
-          alert("Please provide proper information");
+          toast("Please provide proper information");
         });
     }
   }, [formErrors]);

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import { Navbar, Nav, Container } from "react-bootstrap";
 
 export default class DashboardComponent extends Component {
   render() {

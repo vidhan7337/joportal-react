@@ -4,6 +4,9 @@ import LoadingSpinner from "../utils/loader";
 import { useNavigate } from "react-router-dom";
 
 import EmployerDashboard from "../employer/dashboard";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 function ChangePasswordForm() {
   const initialValues = {
@@ -35,19 +38,47 @@ function ChangePasswordForm() {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
-      // setLoading(true);
-      // axios
-      //   .post("https://localhost:44361/gateway/login", formValues)
-      //   .then((response) => {
-      //     setLoading(false);
+      setLoading(true);
+      axios
+        .get(
+          "https://localhost:44361/gateway/getpassword/" +
+            window.localStorage.getItem("id")
+        )
+        .then((response) => {
+          console.log(response);
+          setLoading(false);
+          if (formValues.oldPassword != response.data) {
+            toast("Old Password is wrong");
+          } else {
+            const user = {
+              fullName: window.localStorage.getItem("fullName"),
+              userName: window.localStorage.getItem("userName"),
+              password: formValues.newPassword,
+              email: window.localStorage.getItem("email"),
+              phone: window.localStorage.getItem("phone"),
+              userType: window.localStorage.getItem("usertype"),
+            };
 
-      //     navigate("/dashboard");
-      //   })
-      //   .catch((error) => {
-      //     setLoading(false);
-      //     console.log(error);
-      //     alert("Invalid username or password");
-      //   });
+            const body = JSON.stringify(user);
+            console.log(body);
+            axios
+              .put(
+                "https://localhost:44361/gateway/changepassword/" +
+                  window.localStorage.getItem("id"),
+                body,
+                { headers: { "Content-Type": "application/json" } }
+              )
+              .then((response) => {
+                toast("Password Successfully changed");
+                navigate("/dashboard");
+                console.log(response);
+              })
+              .catch((errors) => {
+                toast("Something went wrong");
+                console.log(errors);
+              });
+          }
+        });
     }
   }, [formErrors]);
 

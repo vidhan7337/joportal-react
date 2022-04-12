@@ -3,6 +3,9 @@ import axios from "axios";
 import LoadingSpinner from "../utils/loader";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../navbar";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure()
 
 function LoginForm() {
   const initialValues = { userName: "", password: "" };
@@ -43,12 +46,14 @@ function LoginForm() {
           window.localStorage.setItem("token", response.data.tokenString);
           window.localStorage.setItem("fullName", response.data.fullName);
           window.localStorage.setItem("phone", response.data.phone);
+          toast("Login success");
           navigate("/dashboard");
         })
         .catch((error) => {
           setLoading(false);
           console.log(error);
-          alert("Invalid username or password");
+          toast("Invalid username or password");
+          
         });
     }
   }, [formErrors]);
